@@ -1,6 +1,7 @@
 # start basic webdriver
 from pydoc import cli
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from json import load, dumps
 from time import sleep
 import requests
@@ -42,9 +43,9 @@ driver.get_cookies()
 
 driver.get("https://www.twitch.tv/directory/following/channels")
 sleep(3)
-tower = driver.find_element_by_class_name("tw-tower")
+tower = driver.find_element(By.CLASS_NAME,"tw-tower")
 sleep(3)
-links = tower.find_elements_by_tag_name("a")
+links = tower.find_elements(By.TAG_NAME,"a")
 for link in links:
     channel_name = link.get_attribute("text")
     try:
@@ -54,13 +55,13 @@ for link in links:
     link_text = link.get_attribute("href") + "/clips?filter=clips&range=24hr"
     driver.get(link_text)
     sleep(3)
-    channel_content = driver.find_element_by_class_name("channel-info-content")
-    clips = channel_content.find_elements_by_css_selector(
+    channel_content = driver.find_element(By.CLASS_NAME,"channel-info-content")
+    clips = channel_content.find_elements(By.CSS_SELECTOR,
         "[data-a-target='preview-card-image-link']"
     )[:10]
     for clip in clips[:1]:
         clip_link = clip.get_attribute("href")
-        image = clip.find_element_by_tag_name("img")
+        image = clip.find_element(By.TAG_NAME,"img")
         link = image.get_attribute("src").split("-preview")[0] + ".mp4"
         clip_name = image.get_attribute("alt")
         print(link)
